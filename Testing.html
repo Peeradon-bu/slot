@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Slot Machine</title>
+    <!-- Google Font Itim -->
+    <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotateX(0deg);
+            }
+            100% {
+                transform: rotateX(360deg);
+            }
+        }
+
+        body {
+            font-family: 'Itim', cursive; /* ใช้ฟอนต์ Itim */
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .slot-machine {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .reels {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reel {
+            font-size: 3rem;
+            border: 2px solid #ddd;
+            padding: 10px;
+            border-radius: 10px;
+            width: 80px;
+            text-align: center;
+            display: inline-block;
+            backface-visibility: hidden;
+        }
+
+        .spin {
+            animation: spin 1s ease-in-out;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #result {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        .money {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slot-machine">
+        <h1>Slot Machine</h1>
+        <div class="money">
+            <span>ยอดเงิน : </span><span id="balance">1000</span> บาท
+        </div>
+        <div class="reels">
+            <div class="reel" id="reel1">🍒</div>
+            <div class="reel" id="reel2">🍋</div>
+            <div class="reel" id="reel3">🍊</div>
+        </div>
+        <br>
+        <button id="spin-button">สุ่ม</button>
+        <br>
+        <button style="margin-top: 20px;" id="add-button">เติมเงิน</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const reel1 = document.getElementById("reel1");
+        const reel2 = document.getElementById("reel2");
+        const reel3 = document.getElementById("reel3");
+        const resultText = document.getElementById("result");
+        const spinButton = document.getElementById("spin-button");
+        const addButton = document.getElementById("add-button");
+        const balanceElement = document.getElementById("balance");
+
+        const symbols = ["🍒", "🍋", "🍊", "🍉", "⭐", "🔔"];
+        let balance = 1000; // เริ่มต้นจำนวนเงิน
+
+        addButton.addEventListener("click", function() {
+            balance = balance + 1000;
+            balanceElement.textContent = balance;
+        });
+
+        spinButton.addEventListener("click", function() {
+            if (balance >= 10) { // ตรวจสอบว่ามีเงินพอเดิมพัน
+                balance -= 10; // หักเงินเดิมพัน
+                balanceElement.textContent = balance; // อัปเดตยอดเงิน
+
+                // เริ่มแอนิเมชัน
+                reel1.classList.add("spin");
+                reel2.classList.add("spin");
+                reel3.classList.add("spin");
+
+                // ช้าลง 1 วินาทีให้แอนิเมชันเสร็จสิ้น
+                setTimeout(() => {
+                    const result1 = getRandomSymbol();
+                    const result2 = getRandomSymbol();
+                    const result3 = getRandomSymbol();
+                    
+                    reel1.textContent = result1;
+                    reel2.textContent = result2;
+                    reel3.textContent = result3;
+
+                    const win = checkResult(result1, result2, result3);
+
+                    if (win) {
+                        balance += 50; // เพิ่มเงินรางวัล
+                        if (result1 == "⭐") {
+                            balance += 950; // เพิ่มเงินรางวัล
+                        }
+                        resultText.textContent = "🎉 ยินดีด้วยคุณได้เงินรางวัล! 🎉";
+                    } else {
+                        resultText.textContent = "เสียใจด้วย คุณไม่ได้เงินรางวัล!";
+                    }
+
+                    balanceElement.textContent = balance; // อัปเดตยอดเงิน
+
+                    // ลบแอนิเมชันหลังจากแสดงผล
+                    reel1.classList.remove("spin");
+                    reel2.classList.remove("spin");
+                    reel3.classList.remove("spin");
+                }, 1000); // 1000ms (1s) คือระยะเวลาแอนิเมชัน
+            } else {
+                resultText.textContent = "เงินไม่เพียงพอในการสุ่ม!";
+            }
+        });
+
+        function getRandomSymbol() {
+            return symbols[Math.floor(Math.random() * symbols.length)];
+        }
+
+        function checkResult(r1, r2, r3) {
+            return r1 === r2 && r2 === r3;
+        }
+    </script>
+</body>
+</html>

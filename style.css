@@ -1,0 +1,67 @@
+@keyframes spin {
+    0% {
+        transform: rotateX(0deg);
+    }
+    100% {
+        transform: rotateX(360deg);
+    }
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.slot-machine {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.reels {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.reel {
+    font-size: 3rem;
+    border: 2px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+    width: 80px;
+    text-align: center;
+    display: inline-block;
+    backface-visibility: hidden;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+#result {
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.spin {
+    animation: spin 1s ease-in-out; /* เรียกใช้ animation */
+}
